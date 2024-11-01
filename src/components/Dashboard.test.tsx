@@ -1,19 +1,27 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import Dashboard from './Dashboard';
 import { vi } from 'vitest';
 
+// Mock the 'react-apexcharts' component
 vi.mock('react-apexcharts', () => ({
     __esModule: true,
     default: () => <div>Mock Chart</div>,
 }));
 
+// Mock the global fetch function
 global.fetch = vi.fn(() =>
     Promise.resolve({
-        text: () => Promise.resolve(
-            'arrival_date_year,arrival_date_month,arrival_date_day_of_month,country,adults,children\n2023,01,01,USA,2,1'
-        ),
+        ok: true,
+        status: 200,
+        statusText: 'OK',
+        json: () => Promise.resolve([
+            { arrival_date_year: '2023', arrival_date_month: '01', arrival_date_day_of_month: '01', country: 'USA', adults: 2, children: 1 }
+        ]), // Assuming you need to return an array of objects for your test
+        headers: {
+            get: () => null, // or a mock value
+        },
     })
-);
+) as unknown as typeof global.fetch; // Type assertion to satisfy TypeScript
 
 describe('Dashboard Component', () => {
     beforeEach(() => {
@@ -39,9 +47,8 @@ describe('Dashboard Component', () => {
         expect(screen.getByText('Adult Sparkline')).toBeInTheDocument();
         expect(screen.getByText('Child Sparkline')).toBeInTheDocument();
     });
-   
+
     it('does not show "No data found" message initially', () => {
         expect(screen.queryByText(/No data found for the selected date range/i)).toBeNull();
     });
-
 });
