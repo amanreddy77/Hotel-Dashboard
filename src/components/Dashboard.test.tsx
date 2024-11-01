@@ -16,12 +16,12 @@ global.fetch = vi.fn(() =>
         statusText: 'OK',
         json: () => Promise.resolve([
             { arrival_date_year: '2023', arrival_date_month: '01', arrival_date_day_of_month: '01', country: 'USA', adults: 2, children: 1 }
-        ]), // Assuming you need to return an array of objects for your test
+        ]), 
         headers: {
-            get: () => null, // or a mock value
+            get: () => null, 
         },
     })
-) as unknown as typeof global.fetch; // Type assertion to satisfy TypeScript
+) as unknown as typeof global.fetch; 
 
 describe('Dashboard Component', () => {
     beforeEach(() => {
