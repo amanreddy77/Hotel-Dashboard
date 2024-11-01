@@ -2,13 +2,13 @@ import { render, screen } from '@testing-library/react';
 import Dashboard from './Dashboard';
 import { vi } from 'vitest';
 
-// Mock the 'react-apexcharts' component
+// Mock'react-apexcharts' component
 vi.mock('react-apexcharts', () => ({
     __esModule: true,
     default: () => <div>Mock Chart</div>,
 }));
 
-// Mock the global fetch function
+
 global.fetch = vi.fn(() =>
     Promise.resolve({
         ok: true,
